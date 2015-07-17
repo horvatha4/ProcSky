@@ -300,7 +300,7 @@ void ProcSky::ToggleUI() {
   win->SetStyleAuto();
   win->SetMovable(true);
   win->SetResizable(true);
-  win->SetLayout(LM_VERTICAL, 6, IntRect(2,2,2,2));
+  win->SetLayout(LM_VERTICAL, 2, IntRect(2,2,2,2));
   win->SetAlignment(HA_LEFT, VA_TOP);
   win->SetOpacity(0.8f);
 
@@ -364,8 +364,9 @@ void ProcSky::CreateSlider(UIElement* parent, const String& label, float* target
   slider->SetStyleAuto();
   slider->SetAlignment(HA_LEFT, VA_TOP);
   slider->SetName(label);
-  slider->SetValue(*target);
   slider->SetRange(range);
+  slider->SetValue(*target);
+
   slider->SetMaxSize(2147483647, 16);
   // Store target for handler to use.
   slider->SetVar(label, target);
