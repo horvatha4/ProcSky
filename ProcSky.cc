@@ -23,6 +23,9 @@
 #include <Urho3D/Math/Vector3.h>
 #include <Urho3D/Math/Vector4.h>
 #include <Urho3D/Resource/ResourceCache.h>
+#if defined(PROCSKY_UI)
+#include <Urho3D/Resource/XMLFile.h>
+#endif
 #include <Urho3D/IO/Log.h>
 #include <Urho3D/Scene/Scene.h>
 
@@ -288,13 +291,16 @@ void ProcSky::ToggleUI() {
     win->Remove();
     return;
   }
+  XMLFile* style(GetSubsystem<ResourceCache>()->GetResource<XMLFile>("UI/DefaultStyle.xml"));
+  uiRoot->SetDefaultStyle(style);
+
   win = new Window(context_);
   uiRoot->AddChild(win);
   win->SetName("ProcSkyWindow");
   win->SetStyleAuto();
   win->SetMovable(true);
   win->SetResizable(true);
-  win->SetLayout(LM_VERTICAL, 6, IntRect(4,0,4,0));
+  win->SetLayout(LM_VERTICAL, 6, IntRect(2,2,2,2));
   win->SetAlignment(HA_LEFT, VA_TOP);
   win->SetOpacity(0.8f);
 
