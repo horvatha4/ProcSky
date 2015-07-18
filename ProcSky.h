@@ -15,7 +15,6 @@
 #include <Urho3D/Graphics/Viewport.h>
 #include <Urho3D/Container/Vector.h>
 #include <Urho3D/Math/Vector3.h>
-#include <Urho3D/Graphics/Zone.h>
 using namespace Urho3D;
 
 namespace Urho3D {
@@ -76,8 +75,6 @@ protected:
 protected:
   /// Camera used for face projections.
   Camera* cam_;
-  /// Zone used for ibl
-  Zone* zone_;
   /// Urho3D Skybox with geometry and main TextureCube.
   SharedPtr<Skybox> skybox_;
   /// Node used for light direction.

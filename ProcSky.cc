@@ -52,7 +52,6 @@ ProcSky::ProcSky(Context* context):
   , updateWait_(0)
   , renderQueued_(true)
   , cam_(NULL)
-  , zone_(NULL)
   , Kr_(Vector3(0.18867780436772762, 0.4978442963618773, 0.6616065586417131))
   , rayleighBrightness_(3.3f)
   , mieBrightness_(0.1f)
@@ -94,9 +93,6 @@ bool ProcSky::Initialize() {
     cam_->SetNearClip(1.0f);
     cam_->SetFarClip(100.0f);
   }
-
-  if (!zone_)
-      zone_ = GetScene()->GetChild("Zone")->GetComponent<Zone>();
 
   // Use first child as light node if it exists; otherwise, create it.
   if (!lightNode_) {
@@ -251,8 +247,6 @@ bool ProcSky::SetRenderSize(unsigned size) {
     GetSubsystem<ResourceCache>()->AddManualResource(skyboxTexCube);
     // Assign material to the Skybox
     skybox_->GetMaterial()->SetTexture(TU_DIFFUSE, skyboxTexCube);
-    if (zone_)
-        zone_->SetZoneTexture(skyboxTexCube);
     renderSize_ = size;
     return true;
   } else {
