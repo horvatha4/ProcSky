@@ -113,7 +113,7 @@ bool ProcSky::Initialize() {
 
   // Create a Skybox to draw to. Set its Material, Technique, and render size.
   skybox_ = node_->CreateComponent<Skybox>();
-  Model* model(cache->GetResource<Model>("Models/box.mdl"));
+  Model* model(cache->GetResource<Model>("Models/Box.mdl"));
   skybox_->SetModel(model);
   SharedPtr<Material> skyboxMat(new Material(context_));
   skyboxMat->SetTechnique(0, cache->GetResource<Technique>("Techniques/DiffSkybox.xml"));
