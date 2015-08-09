@@ -14,6 +14,7 @@
 #include <Urho3D/Graphics/RenderPath.h>
 #include <Urho3D/Graphics/Viewport.h>
 #include <Urho3D/Container/Vector.h>
+#include <Urho3D/Math/Matrix3.h>
 #include <Urho3D/Math/Vector3.h>
 using namespace Urho3D;
 

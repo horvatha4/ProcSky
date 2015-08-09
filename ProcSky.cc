@@ -425,7 +425,7 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
 
 #if defined(PROCSKY_TEXTURE_DUMPING)
   else if (key == KEY_KP_9) {
-    TextureCube* skyboxTexCube = static_cast<TextureCube*>(skybox_->GetMaterial()->GetTexture(TU_DIFFUSE));
+    TextureCube* skyboxTexCube(static_cast<TextureCube*>(skybox_->GetMaterial()->GetTexture(TU_DIFFUSE)));
     String pathName(GetSubsystem<FileSystem>()->GetProgramDir());
     DumpTexCubeImages(skyboxTexCube, pathName + "DiffProcSky_");
   }
@@ -438,10 +438,10 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
 void ProcSky::DumpTexCubeImages(TextureCube* texCube, const String& filePathPrefix) {
   LOGINFO("Save TextureCube: " + filePathPrefix + "[0-5].png");
   for (unsigned j = 0; j < MAX_CUBEMAP_FACES; ++j) {
-    Texture2D* faceTex = static_cast<Texture2D*>(texCube->GetRenderSurface((CubeMapFace)j)->GetParentTexture());
+    Texture2D* faceTex(static_cast<Texture2D*>(texCube->GetRenderSurface((CubeMapFace)j)->GetParentTexture()));
     SharedPtr<Image> faceImage(new Image(context_));
     faceImage->SetSize(faceTex->GetWidth(), faceTex->GetHeight(), faceTex->GetComponents());
-    String filePath = filePathPrefix + String(j) + ".png";
+    String filePath(filePathPrefix + String(j) + ".png");
     if (!texCube->GetData((CubeMapFace)j, 0, faceImage->GetData())) {
       LOGERROR("...failed GetData() for face " + filePath);
     } else {
