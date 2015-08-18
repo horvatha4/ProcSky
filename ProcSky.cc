@@ -71,6 +71,7 @@ ProcSky::ProcSky(Context* context):
   faceRotations_[FACE_NEGATIVE_Z] = Matrix3(-1,0,0, 0,1,0,  0,0,-1);
 }
 ProcSky::~ProcSky() {}
+
 void ProcSky::RegisterObject(Context* context) {
   context->RegisterFactory<ProcSky>();
 }
@@ -250,7 +251,7 @@ bool ProcSky::SetRenderSize(unsigned size) {
     renderSize_ = size;
     return true;
   } else {
-    LOGERROR("ProcSky::SetSize ignored; requires size >= 1.");
+    LOGWARNING("ProcSky::SetSize (" + String(size) + ") ignored; requires size >= 1.");
   }
   return false;
 }
