@@ -430,22 +430,22 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
   }
 
   if (key == KEY_KP_6) {
-    lightNode_->SetRotation(faceRotations_[FACE_POSITIVE_X]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_POSITIVE_X]));
   }
   else if (key == KEY_KP_4) {
-    lightNode_->SetRotation(faceRotations_[FACE_NEGATIVE_X]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_NEGATIVE_X]));
   }
   else if (key == KEY_KP_7) {
-    lightNode_->SetRotation(faceRotations_[FACE_POSITIVE_Y]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_POSITIVE_Y]));
   }
   else if (key == KEY_KP_1) {
-    lightNode_->SetRotation(faceRotations_[FACE_NEGATIVE_Y]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_NEGATIVE_Y]));
   }
   else if (key == KEY_KP_8) {
-    lightNode_->SetRotation(faceRotations_[FACE_POSITIVE_Z]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_POSITIVE_Z]));
   }
   else if (key == KEY_KP_2) {
-    lightNode_->SetRotation(faceRotations_[FACE_NEGATIVE_Z]);
+    lightNode_->SetRotation(Quaternion(faceRotations_[FACE_NEGATIVE_Z]));
   }
 
 #if defined(PROCSKY_TEXTURE_DUMPING)
