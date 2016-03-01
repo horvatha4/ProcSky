@@ -50,7 +50,7 @@ class TextureCube;
 }
 
 class ProcSky: public Component {
-  OBJECT(ProcSky);
+  URHO3D_OBJECT(ProcSky);
 
 public:
   ProcSky(Context* context);
@@ -58,17 +58,16 @@ public:
   static void RegisterObject(Context* context);
   void OnNodeSet(Node* node);
 
-  bool GetUpdateAuto() const { return updateAuto_; }
-  float GetUpdateInterval() const { return updateInterval_; }
-  float GetUpdateWait() const { return updateWait_; }
-  unsigned GetRenderSize() const { return renderSize_; }
-
   /// Automatic update renders according to update interval. If Manual, user calls Update() to render.
   void SetUpdateAuto(bool updateAuto);
+  bool GetUpdateAuto() const { return updateAuto_; }
   /// Set the rendering interval (default 0).
   void SetUpdateInterval(float interval) { updateInterval_ = interval; }
+  float GetUpdateInterval() const { return updateInterval_; }
+  float GetUpdateWait() const { return updateWait_; }
   /// Set size of Skybox TextureCube.
   bool SetRenderSize(unsigned size);
+  unsigned GetRenderSize() const { return renderSize_; }
   /// Initialize objects and subscribe to update events.
   bool Initialize();
   /// Queue render of next frame.

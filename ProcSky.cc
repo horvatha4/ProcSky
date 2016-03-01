@@ -105,7 +105,7 @@ void ProcSky::OnNodeSet(Node* node) {
 }
 
 bool ProcSky::Initialize() {
-  LOGDEBUG("ProcSky::Initialize()");
+  URHO3D_LOGDEBUG("ProcSky::Initialize()");
   ResourceCache* cache(GetSubsystem<ResourceCache>());
   Renderer* renderer(GetSubsystem<Renderer>());
   rPath_ = renderer->GetViewport(0)->GetRenderPath();
@@ -126,7 +126,7 @@ bool ProcSky::Initialize() {
       lightNode_ = children[0];
     }
     if (!lightNode_) {
-      LOGDEBUG("ProcSky::Initialize: Creating node 'ProcSkyLight' with directional light.");
+      URHO3D_LOGDEBUG("ProcSky::Initialize: Creating node 'ProcSkyLight' with directional light.");
       lightNode_ = node_->CreateChild("ProcSkyLight");
       Light* light(lightNode_->CreateComponent<Light>());
       light->SetLightType(LIGHT_DIRECTIONAL);
@@ -183,9 +183,9 @@ bool ProcSky::Initialize() {
   // Perform at least one render to avoid empty sky.
   Update();
 
-  SubscribeToEvent(E_UPDATE, HANDLER(ProcSky, HandleUpdate));
+  SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(ProcSky, HandleUpdate));
 #if defined(PROCSKY_UI)
-  SubscribeToEvent(E_KEYDOWN, HANDLER(ProcSky, HandleKeyDown));
+  SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(ProcSky, HandleKeyDown));
   ToggleUI(); // Initially display UI.
 #endif
   return true;
@@ -270,12 +270,12 @@ bool ProcSky::SetRenderSize(unsigned size) {
     skyboxTexCube->SetAddressMode(COORD_V, ADDRESS_CLAMP);
     skyboxTexCube->SetAddressMode(COORD_W, ADDRESS_CLAMP);
     GetSubsystem<ResourceCache>()->AddManualResource(skyboxTexCube);
-    // Assign material to the Skybox
+
     skybox_->GetMaterial()->SetTexture(TU_DIFFUSE, skyboxTexCube);
     renderSize_ = size;
     return true;
   } else {
-    LOGWARNING("ProcSky::SetSize (" + String(size) + ") ignored; requires size >= 1.");
+    URHO3D_LOGWARNING("ProcSky::SetSize (" + String(size) + ") ignored; requires size >= 1.");
   }
   return false;
 }
@@ -289,7 +289,7 @@ void ProcSky::SetRenderQueued(bool queued) {
   if (renderQueued_ == queued) return;
   // When using manual update, be notified after rendering.
   if (!updateAuto_)
-    SubscribeToEvent(E_POSTRENDERUPDATE, HANDLER(ProcSky, HandlePostRenderUpdate));
+    SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(ProcSky, HandlePostRenderUpdate));
   rPath_->SetEnabled("ProcSky", queued);
   renderQueued_ = queued;
 }
@@ -305,7 +305,7 @@ void ProcSky::ToggleUI() {
   UI* ui(GetSubsystem<UI>());
   UIElement* uiRoot(ui->GetRoot());
   // If window exists, remove it and return.
-  Window* win(dynamic_cast<Window*>(uiRoot->GetChild("ProcSkyWindow", true)));
+  Window* win(static_cast<Window*>(uiRoot->GetChild("ProcSkyWindow", true)));
   if (win) {
     win->Remove();
     return;
@@ -391,7 +391,7 @@ void ProcSky::CreateSlider(UIElement* parent, const String& label, float* target
   slider->SetVar(label, target);
   // Store value label for handler to use.
   slider->SetVar(label+"_value", valueText);
-  SubscribeToEvent(slider, E_SLIDERCHANGED, HANDLER(ProcSky, HandleSliderChanged));
+  SubscribeToEvent(slider, E_SLIDERCHANGED, URHO3D_HANDLER(ProcSky, HandleSliderChanged));
 }
 
 void ProcSky::HandleSliderChanged(StringHash eventType, VariantMap& eventData) {
@@ -461,14 +461,14 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
 #if defined(PROCSKY_TEXTURE_DUMPING)
 
 void ProcSky::DumpTexCubeImages(TextureCube* texCube, const String& filePathPrefix) {
-  LOGINFO("Save TextureCube: " + filePathPrefix + "[0-5].png");
+  URHO3D_LOGINFO("Save TextureCube: " + filePathPrefix + "[0-5].png");
   for (unsigned j = 0; j < MAX_CUBEMAP_FACES; ++j) {
     Texture2D* faceTex(static_cast<Texture2D*>(texCube->GetRenderSurface((CubeMapFace)j)->GetParentTexture()));
     SharedPtr<Image> faceImage(new Image(context_));
     faceImage->SetSize(faceTex->GetWidth(), faceTex->GetHeight(), faceTex->GetComponents());
     String filePath(filePathPrefix + String(j) + ".png");
     if (!texCube->GetData((CubeMapFace)j, 0, faceImage->GetData())) {
-      LOGERROR("...failed GetData() for face " + filePath);
+      URHO3D_LOGERROR("...failed GetData() for face " + filePath);
     } else {
       faceImage->SavePNG(filePath);
     }
@@ -476,12 +476,12 @@ void ProcSky::DumpTexCubeImages(TextureCube* texCube, const String& filePathPref
 }
 
 void ProcSky::DumpTexture(Texture2D* texture, const String& filePath) {
-  LOGINFO("Save texture: " + filePath);
+  URHO3D_LOGINFO("Save texture: " + filePath);
   SharedPtr<Image> image(new Image(context_));
   image->SetSize(texture->GetWidth(), texture->GetHeight(), texture->GetComponents());
 
   if (!texture->GetData(0, image->GetData())) {
-    LOGERROR("...failed GetData().");
+    URHO3D_LOGERROR("...failed GetData().");
   } else {
     image->SavePNG(filePath);
   }
