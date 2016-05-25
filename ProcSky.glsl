@@ -24,7 +24,7 @@
 #include "Uniforms.glsl"
 #include "ScreenPos.glsl"
 #include "Transform.glsl"
-#line 4
+#line 27
 
 varying vec2 vTexCoord;
 
@@ -32,12 +32,7 @@ void VS() {
   mat4 modelMatrix = iModelMatrix;
   vec3 worldPos = GetWorldPos(modelMatrix);
   gl_Position = GetClipPos(worldPos);
-  #ifndef GL_ES
   gl_Position.z = gl_Position.w;
-  #else
-  // On OpenGL ES force Z slightly in front of far plane to avoid clipping artifacts due to inaccuracy
-  gl_Position.z = 0.999 * gl_Position.w;
-  #endif
   vTexCoord = GetQuadTexCoord(gl_Position);
   // Flip GLSL texture coord vertically.
   vTexCoord.y = 1.0 - vTexCoord.y;

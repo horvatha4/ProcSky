@@ -23,10 +23,11 @@
   THE SOFTWARE.
 */
 
-#define PROCSKY_UI
-//#define PROCSKY_TEXTURE_DUMPING
-
 #pragma once
+
+#define PROCSKY_UI
+#define PROCSKY_TEXTURE_DUMPING
+
 #include <Urho3D/Scene/Component.h>
 #include <Urho3D/Graphics/Camera.h>
 #include <Urho3D/Scene/Node.h>
@@ -35,6 +36,7 @@
 #include <Urho3D/Container/Vector.h>
 #include <Urho3D/Math/Matrix3.h>
 #include <Urho3D/Math/Vector3.h>
+
 using namespace Urho3D;
 
 namespace Urho3D {
@@ -50,7 +52,7 @@ class TextureCube;
 }
 
 class ProcSky: public Component {
-  URHO3D_OBJECT(ProcSky);
+  URHO3D_OBJECT(ProcSky, Component);
 
 public:
   ProcSky(Context* context);
@@ -60,18 +62,19 @@ public:
 
   /// Automatic update renders according to update interval. If Manual, user calls Update() to render.
   void SetUpdateAuto(bool updateAuto);
-  bool GetUpdateAuto() const { return updateAuto_; }
   /// Set the rendering interval (default 0).
   void SetUpdateInterval(float interval) { updateInterval_ = interval; }
-  float GetUpdateInterval() const { return updateInterval_; }
-  float GetUpdateWait() const { return updateWait_; }
   /// Set size of Skybox TextureCube.
   bool SetRenderSize(unsigned size);
-  unsigned GetRenderSize() const { return renderSize_; }
   /// Initialize objects and subscribe to update events.
   bool Initialize();
   /// Queue render of next frame.
   void Update();
+
+  bool GetUpdateAuto() const { return updateAuto_; }
+  float GetUpdateInterval() const { return updateInterval_; }
+  float GetUpdateWait() const { return updateWait_; }
+  unsigned GetRenderSize() const { return renderSize_; }
 
 protected:
   void HandleUpdate(StringHash eventType, VariantMap& eventData);

@@ -70,7 +70,7 @@
 ProcSky::ProcSky(Context* context):
   Component(context)
   , renderSize_(256)
-  , renderFOV_(89.5)
+  , renderFOV_(89.5f)
   , updateAuto_(true)
   , updateInterval_(0.0f)
   , updateWait_(0)
@@ -352,7 +352,6 @@ void ProcSky::ToggleUI() {
   IntVector2 scrSize(graphics->GetWidth(), graphics->GetHeight());
   IntVector2 winSize(scrSize);
   winSize.x_ = (int)(0.3f * winSize.x_); winSize.y_ = (int)(0.5f * winSize.y_);
-  IntVector2 uiPos(uiRoot->GetPosition());
   win->SetSize(winSize);
   win->SetPosition(0, (scrSize.y_-winSize.y_)/2);
 }
@@ -390,7 +389,7 @@ void ProcSky::CreateSlider(UIElement* parent, const String& label, float* target
   // Store target for handler to use.
   slider->SetVar(label, target);
   // Store value label for handler to use.
-  slider->SetVar(label+"_value", valueText);
+  slider->SetVar(label+"_value", static_cast<void *>(valueText));
   SubscribeToEvent(slider, E_SLIDERCHANGED, URHO3D_HANDLER(ProcSky, HandleSliderChanged));
 }
 
@@ -402,16 +401,18 @@ void ProcSky::HandleSliderChanged(StringHash eventType, VariantMap& eventData) {
   String sliderName(slider->GetName());
   // Get target member from node var and update it.
   float* target(static_cast<float*>(slider->GetVar(sliderName).GetVoidPtr()));
-  *target = value;
+  if (target)
+    *target = value;
   // Get stored value Text label and update it.
   Text* valueText(static_cast<Text*>(slider->GetVar(sliderName+"_value").GetVoidPtr()));
-  valueText->SetText(String(value));
+  if (valueText)
+    valueText->SetText(String(value));
 }
 
 void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
   if (GetSubsystem<UI>()->GetFocusElement()) { return; }
   int key(eventData[KeyDown::P_KEY].GetInt());
-  int qual(eventData[KeyDown::P_QUALIFIERS].GetInt());
+  int qualifiers(eventData[KeyDown::P_QUALIFIERS].GetInt());
 
   if (key == KEY_U) {
     updateAuto_ = !updateAuto_;
@@ -452,7 +453,7 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
   else if (key == KEY_KP_9) {
     TextureCube* skyboxTexCube(static_cast<TextureCube*>(skybox_->GetMaterial()->GetTexture(TU_DIFFUSE)));
     String pathName(GetSubsystem<FileSystem>()->GetProgramDir());
-    DumpTexCubeImages(skyboxTexCube, pathName + "DiffProcSky_");
+    DumpTexCubeImages(skyboxTexCube, pathName);
   }
 #endif
 }
@@ -460,21 +461,22 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
 
 #if defined(PROCSKY_TEXTURE_DUMPING)
 
-void ProcSky::DumpTexCubeImages(TextureCube* texCube, const String& filePathPrefix) {
-  URHO3D_LOGINFO("Save TextureCube: " + filePathPrefix + "[0-5].png");
-  for (unsigned j = 0; j < MAX_CUBEMAP_FACES; ++j) {
-    Texture2D* faceTex(static_cast<Texture2D*>(texCube->GetRenderSurface((CubeMapFace)j)->GetParentTexture()));
+void ProcSky::DumpTexCubeImages(TextureCube* texCube, const String& pathName) {
+  URHO3D_LOGINFO("Save TextureCube: " + pathName + "ProcSky_[0-5].png");
+  for (unsigned i(0); i < MAX_CUBEMAP_FACES; ++i) {
+    Texture2D* faceTex(static_cast<Texture2D*>(texCube->GetRenderSurface((CubeMapFace)i)->GetParentTexture()));
     SharedPtr<Image> faceImage(new Image(context_));
     faceImage->SetSize(faceTex->GetWidth(), faceTex->GetHeight(), faceTex->GetComponents());
-    String filePath(filePathPrefix + String(j) + ".png");
-    if (!texCube->GetData((CubeMapFace)j, 0, faceImage->GetData())) {
+    FileSystem* fs(GetSubsystem<FileSystem>());
+    fs->CreateDir(pathName);
+    String filePath(pathName + "ProcSky_" + String(i) + ".png");
+    if (!texCube->GetData((CubeMapFace)i, 0, faceImage->GetData())) {
       URHO3D_LOGERROR("...failed GetData() for face " + filePath);
     } else {
       faceImage->SavePNG(filePath);
     }
   }
 }
-
 void ProcSky::DumpTexture(Texture2D* texture, const String& filePath) {
   URHO3D_LOGINFO("Save texture: " + filePath);
   SharedPtr<Image> image(new Image(context_));
