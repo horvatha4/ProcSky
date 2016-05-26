@@ -116,6 +116,8 @@ protected:
 #if defined(PROCSKY_UI)
   Vector3 angVel_;
 #endif
+
+public:
   /// Atmospheric parameters.
   Vector3 Kr_; // Absorption profile of air.
   float rayleighBrightness_;
