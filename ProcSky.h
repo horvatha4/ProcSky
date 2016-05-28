@@ -25,8 +25,8 @@
 
 #pragma once
 
-#define PROCSKY_UI
-#define PROCSKY_TEXTURE_DUMPING
+//#define PROCSKY_UI
+//#define PROCSKY_TEXTURE_DUMPING
 
 #include <Urho3D/Scene/Component.h>
 #include <Urho3D/Graphics/Camera.h>
@@ -70,6 +70,8 @@ public:
   bool Initialize();
   /// Queue render of next frame.
   void Update();
+  void SetCamera(Camera* c) { cam_ = c; }
+  void SetLightNode(Node* l);
 
   bool GetUpdateAuto() const { return updateAuto_; }
   float GetUpdateInterval() const { return updateInterval_; }

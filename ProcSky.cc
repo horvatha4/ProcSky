@@ -104,6 +104,16 @@ void ProcSky::OnNodeSet(Node* node) {
   if (!node) return;
 }
 
+void ProcSky::SetLightNode(Node* l)
+{
+	lightNode_ = l;
+	Light* light(lightNode_->CreateComponent<Light>());
+	light->SetLightType(LIGHT_DIRECTIONAL);
+	Color lightColor;
+	lightColor.FromHSV(57.0f, 9.9f, 75.3f);
+	light->SetColor(lightColor);
+}
+
 bool ProcSky::Initialize() {
   URHO3D_LOGDEBUG("ProcSky::Initialize()");
   ResourceCache* cache(GetSubsystem<ResourceCache>());
@@ -185,7 +195,7 @@ bool ProcSky::Initialize() {
 
   SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(ProcSky, HandleUpdate));
 #if defined(PROCSKY_UI)
-  SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(ProcSky, HandleKeyDown));
+  //SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(ProcSky, HandleKeyDown));
   ToggleUI(); // Initially display UI.
 #endif
   return true;
@@ -417,7 +427,7 @@ void ProcSky::HandleKeyDown(StringHash eventType, VariantMap& eventData) {
   if (key == KEY_U) {
     updateAuto_ = !updateAuto_;
   }
-  else if (key == KEY_SPACE) {
+  else if (key == KEY_1) {
     ToggleUI();
   }
   else if (key == '-') {
