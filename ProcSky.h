@@ -70,7 +70,6 @@ public:
   bool Initialize();
   /// Queue render of next frame.
   void Update();
-  void SetCamera(Camera* c) { cam_ = c; }
   void SetLightNode(Node* l);
 
   bool GetUpdateAuto() const { return updateAuto_; }
